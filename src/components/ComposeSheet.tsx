@@ -77,13 +77,14 @@ export function ComposeSheet({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-[999] flex items-end justify-center">
       <button
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
         aria-label="Close"
       />
-      <div className="relative w-full max-w-md glass rounded-t-3xl p-5 pb-[calc(env(safe-area-inset-bottom)+20px)] fade-up">
+      {/* Added max-h-[90vh] and overflow-y-auto here to prevent the button from being pushed off-screen */}
+      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto glass rounded-t-3xl p-5 pb-28 fade-up">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-display">Release a Light</h2>
           <button onClick={onClose} className="p-1.5 rounded-full hover:bg-white/5" aria-label="Close">
@@ -138,7 +139,9 @@ export function ComposeSheet({
         <button
           onClick={submit}
           disabled={busy}
-          className="w-full rounded-2xl py-3 font-medium bg-gradient-to-r from-lantern to-lantern-glow text-primary-foreground glow-lantern disabled:opacity-60 flex items-center justify-center gap-2"
+          // I swapped the custom 'lantern' classes for standard Tailwind orange and yellow, 
+          // and added a standard box-shadow to recreate the 'glow' effect.
+          className="w-full rounded-2xl py-3 font-medium bg-gradient-to-r from-orange-500 to-yellow-400 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)] disabled:opacity-60 flex items-center justify-center gap-2"
         >
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>🏮</span>}
           {busy ? "Releasing…" : "Release Light"}
