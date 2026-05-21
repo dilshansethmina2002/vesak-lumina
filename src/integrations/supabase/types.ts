@@ -14,7 +14,62 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      likes: {
+        Row: {
+          created_at: string
+          guest_id: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          created_at?: string
+          guest_id: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          created_at?: string
+          guest_id?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          caption: string | null
+          created_at: string
+          guest_id: string
+          id: string
+          image_urls: string[]
+          like_count: number
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          guest_id: string
+          id?: string
+          image_urls?: string[]
+          like_count?: number
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          guest_id?: string
+          id?: string
+          image_urls?: string[]
+          like_count?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
