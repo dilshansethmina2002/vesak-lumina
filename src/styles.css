@@ -90,9 +90,9 @@
 
 @layer utilities {
   .glass {
-    background: oklch(1 0 0 / 0.04);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    background: rgba(0, 0, 0, 0.4); /* Make sure this uses rgba, not a solid hex */
+    -webkit-backdrop-filter: blur(12px); /* For iOS/Safari */
+    backdrop-filter: blur(12px);
     border: 1px solid oklch(1 0 0 / 0.08);
   }
   .glow-lantern {
