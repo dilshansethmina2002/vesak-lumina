@@ -1,20 +1,22 @@
 // Anonymous guest identity stored in localStorage
 const KEY = "vesak.guestId";
 
-function generateId() {
-  const chars = "0123456789ABCDEF";
-  let s = "";
-  for (let i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * 16)];
-  return `Guest-${s}`;
-}
-
 export function getGuestId(): string {
+  // Handle Next.js/Vercel SSR
   if (typeof window === "undefined") return "Guest-0000";
+  
   let id = window.localStorage.getItem(KEY);
+  
   if (!id) {
-    id = generateId();
+    // Safely check if crypto exists (HTTPS/localhost), otherwise use a fallback (HTTP network testing)
+    const uniqueString = window.crypto?.randomUUID 
+      ? window.crypto.randomUUID() 
+      : Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+      
+    id = `Guest-${uniqueString}`;
     window.localStorage.setItem(KEY, id);
   }
+  
   return id;
 }
 
