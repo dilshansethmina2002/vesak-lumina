@@ -34,11 +34,11 @@ function CardMaker() {
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const handleCreateLink = async () => {
+ const handleCreateLink = async () => {
     setIsSaving(true);
     try {
-      // 1. Save to Supabase
-      const { data, error } = await supabase
+      // 1. Save to Supabase (using 'as any' to bypass strict table checking)
+      const { data, error } = await (supabase as any)
         .from('vesak_cards')
         .insert([{ message: text, bg_class: bgClass }])
         .select('id')
@@ -46,7 +46,7 @@ function CardMaker() {
 
       if (error) throw error;
 
-      // 2. Generate the shareable URL (assuming your site is at window.location.origin)
+      // 2. Generate the shareable URL
       const url = `${window.location.origin}/card/${data.id}`;
       setShareLink(url);
     } catch (error) {

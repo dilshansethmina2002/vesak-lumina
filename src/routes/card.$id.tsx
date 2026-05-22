@@ -4,34 +4,37 @@ import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/AppShell";
 import { Loader2 } from "lucide-react";
 
-// This tells TanStack Router to manage this page
 export const Route = createFileRoute("/card/$id")({
   component: ViewCardPage,
 });
 
 function ViewCardPage() {
-  // TanStack's way of getting the ID from the URL (e.g., yoursite.com/card/123)
-  const { id } = Route.useParams();
+  // FIX 1: We explicitly tell TypeScript that 'id' is a string. 
+  // This stops it from panicking if the route tree hasn't fully updated yet.
+  const { id } = Route.useParams() as { id: string };
   
   const [card, setCard] = useState<{ message: string; bg_class: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCard() {
-      const { data, error } = await supabase
+      // We use (supabase as any) to stop TypeScript from panicking 
+      // about the newly created table it doesn't know about yet.
+      const { data, error } = await (supabase as any)
         .from("vesak_cards")
         .select("message, bg_class")
         .eq("id", id)
         .single();
 
       if (!error && data) {
+        // Because we bypassed the strict typing above, 
+        // we can just pass the data directly in now!
         setCard(data);
       }
       setLoading(false);
     }
     fetchCard();
   }, [id]);
-
   return (
     <AppShell title="Vesak Greeting" subtitle="Someone sent you a card">
       <div className="w-full max-w-md mx-auto p-4 flex flex-col items-center justify-center min-h-[60vh] fade-up">
