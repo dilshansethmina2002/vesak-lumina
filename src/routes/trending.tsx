@@ -31,7 +31,9 @@ function TrendingPage() {
     <AppShell title="Trending" subtitle="The brightest lanterns tonight">
       <div className="space-y-5">
         {posts.map((p) => (
-          <PostCard key={p.id} post={p} />
+          <PostCard key={p.id} post={p} 
+          onDelete={(deletedId) => setPosts(currentPosts => currentPosts.filter(p => p.id !== deletedId))}
+          />
         ))}
         {posts.length === 0 && (
           <p className="text-center text-muted-foreground py-20">No lanterns are glowing yet.</p>

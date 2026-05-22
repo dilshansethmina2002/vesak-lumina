@@ -1,9 +1,9 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Compass, Flame, User } from "lucide-react";
+import { Home, Mail, Flame, User } from "lucide-react"; // Swapped Compass for Mail
 
 const items = [
   { to: "/", label: "Stream", icon: Home },
-  { to: "/explore", label: "Explore", icon: Compass },
+  { to: "/cardMaker", label: "Card", icon: Mail }, // 
   { to: "/trending", label: "Trending", icon: Flame },
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
@@ -24,10 +24,11 @@ export function BottomNav() {
             >
               <Icon
                 className={`w-5 h-5 transition-all ${
-                  active ? "text-lantern drop-shadow-[0_0_8px_oklch(0.82_0.17_65/0.8)]" : "text-muted-foreground"
+                  // Swapped custom 'lantern' colors for standard Tailwind orange
+                  active ? "text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]" : "text-muted-foreground"
                 }`}
               />
-              <span className={`text-[10px] tracking-wide ${active ? "text-lantern" : "text-muted-foreground"}`}>
+              <span className={`text-[10px] tracking-wide ${active ? "text-orange-500" : "text-muted-foreground"}`}>
                 {label}
               </span>
             </Link>

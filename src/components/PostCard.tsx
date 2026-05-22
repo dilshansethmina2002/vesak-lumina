@@ -1,24 +1,38 @@
 import { useEffect, useRef, useState } from "react";
-import { Heart } from "lucide-react";
+import { Heart, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getGuestId, timeAgo } from "@/lib/guest";
+import { toast } from "sonner";
 
 export type Post = {
   id: string;
   guest_id: string;
+  display_name?: string | null; // Added the new property
   caption: string | null;
   image_urls: string[];
   like_count: number;
   created_at: string;
 };
 
-export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) => void }) {
+export function PostCard({ 
+  post, 
+  onChange,
+  onDelete 
+}: { 
+  post: Post; 
+  onChange?: (p: Post) => void;
+  onDelete?: (id: string) => void;
+}) {
   const guestId = getGuestId();
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(post.like_count);
   const [pop, setPop] = useState(0);
   const [imgIdx, setImgIdx] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
   const tapTimer = useRef<number | null>(null);
+
+  // The hidden ID is still used to verify ownership securely
+  const isOwner = post.guest_id === guestId;
 
   useEffect(() => {
     let cancel = false;
@@ -66,16 +80,71 @@ export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) 
     }
   };
 
+  const handleDelete = () => {
+    toast("Remove this light?", {
+      description: "Are you sure you want to let this go?",
+      action: {
+        label: "Remove",
+        onClick: async () => {
+          setIsDeleting(true);
+          const toastId = toast.loading("Releasing...");
+          
+          try {
+            const { data, error } = await supabase
+              .from("posts")
+              .delete()
+              .eq("id", post.id)
+              .select(); 
+
+            if (error) throw error;
+            
+            if (!data || data.length === 0) {
+                throw new Error("Database blocked deletion.");
+            }
+            
+            onDelete?.(post.id);
+            toast.success("Light removed peacefully.", { id: toastId });
+          } catch (e) {
+            console.error("Failed to delete post:", e);
+            toast.error("Failed to remove light. Please try again.", { id: toastId });
+            setIsDeleting(false);
+          }
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {}, 
+      },
+    });
+  };
+
   const imgs = post.image_urls.length > 0 ? post.image_urls : [];
 
   return (
-    <article className="glass rounded-3xl overflow-hidden fade-up">
+    <article className={`glass rounded-3xl overflow-hidden fade-up transition-opacity ${isDeleting ? "opacity-50 pointer-events-none" : ""}`}>
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-gradient-to-br from-lantern to-lantern-glow glow-lantern" />
-          <span className="text-sm font-medium tracking-wide">{post.guest_id}</span>
+          
+          {/* Replaced guest_id with display_name, falling back to "Guest" */}
+          <span className="text-sm font-medium tracking-wide">
+            {post.display_name || "Guest"}
+          </span>
+          
         </div>
-        <span className="text-xs text-muted-foreground">{timeAgo(post.created_at)}</span>
+        
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground">{timeAgo(post.created_at)}</span>
+          {isOwner && (
+            <button
+              onClick={handleDelete}
+              className="text-muted-foreground hover:text-heart transition-colors"
+              aria-label="Delete light"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {imgs.length > 0 && (

@@ -11,8 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrendingRouteImport } from './routes/trending'
 import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as CardMakerRouteImport } from './routes/cardMaker'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CardIdRouteImport } from './routes/card.$id'
 
 const TrendingRoute = TrendingRouteImport.update({
   id: '/trending',
@@ -24,9 +25,9 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ExploreRoute = ExploreRouteImport.update({
-  id: '/explore',
-  path: '/explore',
+const CardMakerRoute = CardMakerRouteImport.update({
+  id: '/cardMaker',
+  path: '/cardMaker',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -34,39 +35,48 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CardIdRoute = CardIdRouteImport.update({
+  id: '/card/$id',
+  path: '/card/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/explore': typeof ExploreRoute
+  '/cardMaker': typeof CardMakerRoute
   '/profile': typeof ProfileRoute
   '/trending': typeof TrendingRoute
+  '/card/$id': typeof CardIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/explore': typeof ExploreRoute
+  '/cardMaker': typeof CardMakerRoute
   '/profile': typeof ProfileRoute
   '/trending': typeof TrendingRoute
+  '/card/$id': typeof CardIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/explore': typeof ExploreRoute
+  '/cardMaker': typeof CardMakerRoute
   '/profile': typeof ProfileRoute
   '/trending': typeof TrendingRoute
+  '/card/$id': typeof CardIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/explore' | '/profile' | '/trending'
+  fullPaths: '/' | '/cardMaker' | '/profile' | '/trending' | '/card/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/explore' | '/profile' | '/trending'
-  id: '__root__' | '/' | '/explore' | '/profile' | '/trending'
+  to: '/' | '/cardMaker' | '/profile' | '/trending' | '/card/$id'
+  id: '__root__' | '/' | '/cardMaker' | '/profile' | '/trending' | '/card/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ExploreRoute: typeof ExploreRoute
+  CardMakerRoute: typeof CardMakerRoute
   ProfileRoute: typeof ProfileRoute
   TrendingRoute: typeof TrendingRoute
+  CardIdRoute: typeof CardIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -85,11 +95,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/explore': {
-      id: '/explore'
-      path: '/explore'
-      fullPath: '/explore'
-      preLoaderRoute: typeof ExploreRouteImport
+    '/cardMaker': {
+      id: '/cardMaker'
+      path: '/cardMaker'
+      fullPath: '/cardMaker'
+      preLoaderRoute: typeof CardMakerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -99,14 +109,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/card/$id': {
+      id: '/card/$id'
+      path: '/card/$id'
+      fullPath: '/card/$id'
+      preLoaderRoute: typeof CardIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ExploreRoute: ExploreRoute,
+  CardMakerRoute: CardMakerRoute,
   ProfileRoute: ProfileRoute,
   TrendingRoute: TrendingRoute,
+  CardIdRoute: CardIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

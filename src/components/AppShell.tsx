@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { BottomNav } from "./BottomNav";
 import { LanternBackground } from "./LanternBackground";
+// 1. Import the Toaster
+import { Toaster } from "sonner"; 
 
 export function AppShell({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
   return (
@@ -12,6 +14,9 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
       </header>
       <main className="relative z-10 max-w-md mx-auto px-4 pb-36">{children}</main>
       <BottomNav />
+      
+      {/* 2. Add the Toaster here so notifications can appear */}
+      <Toaster theme="dark" position="top-center" />
     </div>
   );
 }

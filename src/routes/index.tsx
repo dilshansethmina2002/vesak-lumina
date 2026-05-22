@@ -76,7 +76,9 @@ function StreamPage() {
 
       <div className="space-y-5">
         {posts.map((p) => (
-          <PostCard key={p.id} post={p} />
+          <PostCard key={p.id} post={p}
+          onDelete={(deletedId) => setPosts(currentPosts => currentPosts.filter(p => p.id !== deletedId))}
+           />
         ))}
         {posts.length === 0 && !loading && (
           <div className="text-center text-muted-foreground py-20">
